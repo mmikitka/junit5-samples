@@ -85,12 +85,12 @@ def java_junit5_test(name, srcs, test_package, deps = [], runtime_deps = [], **k
         for artifact_id in JUNIT_PLATFORM_ARTIFACT_ID_LIST
     ]
 
-    print("name = " + name)
-    print("srcs = " + srcs)
-    print("args = " + junit_console_args)
-    print("deps = " + mydeps)
-    print("runtime_deps = " + myruntime_deps)
-    print("kwargs = " + kwargs)
+    print("name = {}".format(name))
+    print("srcs = {}".format(srcs))
+    print("args = {}".format(junit_console_args))
+    print("deps = {}".format(mydeps))
+    print("runtime_deps = {}".format(myruntime_deps))
+    print("kwargs = ".format(kwargs))
     native.java_test(
         name = name,
         srcs = srcs,
