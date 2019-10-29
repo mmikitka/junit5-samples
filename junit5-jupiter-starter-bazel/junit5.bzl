@@ -70,25 +70,35 @@ def java_junit5_test(name, srcs, test_package, deps = [], runtime_deps = [], **k
     else:
         fail("must specify 'test_package'")
 
+    mydeps = deps + [
+        _format_maven_jar_dep_name(JUNIT_JUPITER_GROUP_ID, artifact_id)
+        for artifact_id in JUNIT_JUPITER_ARTIFACT_ID_LIST
+    ] + [
+        _format_maven_jar_dep_name(JUNIT_PLATFORM_GROUP_ID, "junit-platform-suite-api"),
+    ] + [
+        _format_maven_jar_dep_name(t[0], t[1])
+        for t in JUNIT_EXTRA_DEPENDENCIES
+    ]
+
+    myruntime_deps = runtime_deps + [
+        _format_maven_jar_dep_name(JUNIT_PLATFORM_GROUP_ID, artifact_id)
+        for artifact_id in JUNIT_PLATFORM_ARTIFACT_ID_LIST
+    ]
+
+    print("name = " + name)
+    print("srcs = " + srcs)
+    print("args = " + junit_console_args)
+    print("deps = " + mydeps)
+    print("runtime_deps = " + myruntime_deps)
+    print("kwargs = " + kwargs)
     native.java_test(
         name = name,
         srcs = srcs,
         use_testrunner = False,
         main_class = "org.junit.platform.console.ConsoleLauncher",
         args = junit_console_args,
-        deps = deps + [
-            _format_maven_jar_dep_name(JUNIT_JUPITER_GROUP_ID, artifact_id)
-            for artifact_id in JUNIT_JUPITER_ARTIFACT_ID_LIST
-        ] + [
-            _format_maven_jar_dep_name(JUNIT_PLATFORM_GROUP_ID, "junit-platform-suite-api"),
-        ] + [
-            _format_maven_jar_dep_name(t[0], t[1])
-            for t in JUNIT_EXTRA_DEPENDENCIES
-        ],
-        runtime_deps = runtime_deps + [
-            _format_maven_jar_dep_name(JUNIT_PLATFORM_GROUP_ID, artifact_id)
-            for artifact_id in JUNIT_PLATFORM_ARTIFACT_ID_LIST
-        ],
+        deps = mydeps,
+        runtime_deps = myruntime_deps,
         **kwargs
     )
 
